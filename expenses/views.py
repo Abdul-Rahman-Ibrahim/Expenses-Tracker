@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-def index(request):
+def index_view(request):
     return render(request, 'expenses/index.html')
 
-def add_expenses(request):
+def add_expenses_view(request):
     return render(request, 'expenses/add_expense.html')
