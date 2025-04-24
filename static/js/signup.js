@@ -1,7 +1,11 @@
 const usernameField = document.querySelector("#usernameField");
 const feedBackArea = document.querySelector(".invalid-feedback");
+
 usernameField.addEventListener("keyup", (e) => {
     const usernameVal = e.target.value;
+
+    usernameField.classList.remove("is-invalid");
+    feedBackArea.style.display = "none";
 
     if (usernameVal.length > 0) {
         fetch("/authentication/validate-username/", {
@@ -9,9 +13,8 @@ usernameField.addEventListener("keyup", (e) => {
             method: "POST",
 
         })
-            .then(res => res.json())
-            .then(data => {
-            // console.log("data", data);
+            .then((res) => res.json())
+            .then((data) => {
             if (data.username_error) {
                 usernameField.classList.add("is-invalid");
                 feedBackArea.style.display = "block";
