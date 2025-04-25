@@ -26,11 +26,16 @@
 
                 <div class="form-group mb-4">
                     <label for="passwordField" class="form-label">Password</label>
-                    <input type="password" name="password" id="passwordField" placeholder="Enter password"
-                        class="form-control form-control-sm">
+
+                    <div class="input-group">
+                        <input type="password" name="password" id="passwordField" placeholder="Enter password"
+                            class="form-control form-control-sm">
+                        <button type="button" class="btn btn-outline-secondary btn-sm show-password-toggle">Show</button>
+                    </div>
                 </div>
 
-                <div class="invalid-feedback" style="display:none"></div>
+                <div class="password-invalid-feedback invalid-feedback" style="display:none"></div>
+
 
                 <button type="submit" class="btn btn-primary w-100">Register</button>
             </form>

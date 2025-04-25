@@ -1,3 +1,4 @@
+import re
 import json
 from validate_email import validate_email
 
@@ -36,4 +37,33 @@ class UserNameValidationView(View):
             return JsonResponse({'username_error': 'sorry username already used'}, status=409)
         return JsonResponse({'username_valid': True})
 
+
+class PasswordValidationView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        password = data['password']
+
+        password_validity_message = (
+            "Password requirements:\n"
+            "- Should have at least one number\n"
+            "- Should have at least one uppercase and one lowercase character\n"
+            "- Should have at least one special symbol\n"
+            "- Should be between 6 to 20 characters long"
+        )
+
+
+        password_valid = self.check_password_validity(password)
+        if not password_valid:
+            return JsonResponse({'password_invalid': password_validity_message}, status=400)
+        return JsonResponse({'password_valid': True})
+        
     
+    @staticmethod
+    def check_password_validity(passwd):
+        reg = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!#%*?&]{6,20}$"
+        pat = re.compile(reg)               
+        mat = re.search(pat, passwd)
+        
+        if mat:
+            return True
+        return False

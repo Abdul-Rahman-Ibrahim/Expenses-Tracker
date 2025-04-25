@@ -1,9 +1,51 @@
 const usernameField = document.querySelector("#usernameField");
-const emailField = document.querySelector("#emailField");
 const usernameFeedBackArea = document.querySelector(".username-invalid-feedback");
+
+const emailField = document.querySelector("#emailField");
 const emailFeedBackArea = document.querySelector(".email-invalid-feedback");
 
+const passwordField = document.querySelector("#passwordField");
+const passwordFeedBackArea = document.querySelector(".password-invalid-feedback");
+const showPasswordToggle = document.querySelector(".show-password-toggle");
+
 const usernameSuccessOutput = document.querySelector(".usernameSuccessOutput");
+
+
+const handleToggleInput = (e) => {
+    if (showPasswordToggle.textContent === "Show") {
+        showPasswordToggle.textContent = "Hide";
+        passwordField.setAttribute("type", "text");
+    } else {
+        showPasswordToggle.textContent = "Show";
+        passwordField.setAttribute("type", "password");
+    }
+};
+showPasswordToggle.addEventListener("click", handleToggleInput);
+
+passwordField.addEventListener("keyup", (e) => {
+    const passwordVal = e.target.value;
+
+    passwordField.classList.remove("is-invalid");
+    passwordFeedBackArea.style.display = "none";
+
+    if (passwordVal.length > 0) {
+        fetch("/authentication/validate-password/", {
+            body: JSON.stringify({password: passwordVal}),
+            method: "POST",
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.password_invalid) {
+                    passwordField.classList.add("is-invalid");
+                    passwordFeedBackArea.style.display = "block";
+                    passwordFeedBackArea.innerHTML = `<p>${data.password_invalid}</p>`;
+                }
+            })
+    }
+
+}
+)
+
 
 emailField.addEventListener("keyup", (e) => {
     const emailVal = e.target.value
