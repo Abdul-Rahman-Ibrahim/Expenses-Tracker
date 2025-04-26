@@ -6,9 +6,25 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.models import User
+from django.contrib import messages
 
 class SignupView(View):
     def get(self, request):
+        return render(request, 'authentication/signup.html')
+    
+    def post(self, request):
+        username = request.POST.get("username")
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        if username and email and password:
+            messages.success(request, "Success")
+            # messages.warning(request, "Warning")
+            # messages.info(request, "Info")
+            messages.error(request, "Error")
+        else:
+            messages.error(request, "Error")
+            
         return render(request, 'authentication/signup.html')
 
 
