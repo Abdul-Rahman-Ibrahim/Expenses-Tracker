@@ -1,5 +1,6 @@
 import re
 import json
+import time
 from validate_email import validate_email
 
 from django.shortcuts import render, redirect
@@ -7,6 +8,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib import auth
 from django.urls import reverse
 from django.http import HttpResponse
 
@@ -75,6 +77,36 @@ class SignupView(View):
 class LoginView(View):
     def get(self, request):
         return render(request, 'authentication/login.html')
+    
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        context = {
+            "fieldValues": request.POST
+        }
+
+        if username and password:
+            user = auth.authenticate(username=username, password=password)
+
+            if user:
+                if user.is_active:
+                    auth.login(request, user)
+                    messages.success(request, f'Welcome {username}. You are now logged in')
+                    return redirect('home')
+                else:
+                    messages.error(request, 'Account is not active, please check your email')
+                    return render(request, 'authentication/login.html', context=context)
+            else:
+                messages.error(request, f'Account with {username} does not exist.')
+                return render(request, 'authentication/login.html', context=context)
+        
+        else:
+            messages.error(request, 'Invalid Credentials')
+            return render(request, 'authentication/login.html', context=context)
+
+
+
 
 
 class EmailFieldView(View):
