@@ -70,6 +70,10 @@ class SignupView(View):
             else:
                 messages.error(request, 'Email is taken.')
                 return render(request, 'authentication/signup.html', context=context)
+        
+        else:
+            messages.error(request, 'User name is taken!')
+            return render(request, 'authentication/signup.html', context=context)
 
         return render(request, 'authentication/signup.html')
 
@@ -98,15 +102,18 @@ class LoginView(View):
                     messages.error(request, 'Account is not active, please check your email')
                     return render(request, 'authentication/login.html', context=context)
             else:
-                messages.error(request, f'Account with {username} does not exist.')
+                messages.error(request, f'Invalid credentials')
                 return render(request, 'authentication/login.html', context=context)
         
         else:
-            messages.error(request, 'Invalid Credentials')
             return render(request, 'authentication/login.html', context=context)
 
 
-
+class LogoutView(View):
+    def post(self, request):
+        auth.logout(request)
+        messages.success(request, 'You are now logged out')
+        return redirect('login')
 
 
 class EmailFieldView(View):
