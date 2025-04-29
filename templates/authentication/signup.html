@@ -14,7 +14,7 @@
                 <div class="form-group mb-3">
                     <label for="usernameField" class="form-label">Username</label>
                     <input type="text" name="username" id="usernameField" placeholder="Enter username"
-                        class="form-control form-control-sm">
+                        class="form-control form-control-sm" value="{{ fieldValues.username }}">
                 </div>
 
                 <div class="username-invalid-feedback invalid-feedback" style="display:none"></div>
@@ -23,7 +23,7 @@
                 <div class="form-group mb-3">
                     <label for="emailField" class="form-label">Email</label>
                     <input type="email" name="email" id="emailField" placeholder="Enter email"
-                        class="form-control form-control-sm">
+                        class="form-control form-control-sm" value="{{fieldValues.email}}">
                 </div>
 
                 <div class="email-invalid-feedback invalid-feedback" style="display:none"></div>
@@ -40,8 +40,8 @@
 
                 <div class="password-invalid-feedback invalid-feedback" style="display:none"></div>
 
+                <button type="submit" class="submit-btn btn btn-primary w-100" id="submitField">Register</button>
 
-                <button type="submit" class="btn btn-primary w-100">Register</button>
             </form>
         </div>
     </div>

@@ -8,25 +8,62 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from django.core.mail import EmailMessage
+
+def send_email(rcpt_email):
+    subject = 'Activate your account.'
+    body = 'Please verify your account'
+
+    email = EmailMessage (
+        subject,
+        body,
+        "abdulrahmanibrahim.ish@gmail.com",
+        [rcpt_email],
+    )
+
+    email.send(fail_silently=False)
+
+
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'authentication/login.html')
+    
+    def post(self, request):
+        username = request.POST.get('username')
+        print(username)
+        return render(request, 'authentication/login.html')
+
 class SignupView(View):
     def get(self, request):
         return render(request, 'authentication/signup.html')
     
     def post(self, request):
-        username = request.POST.get("username")
-        email = request.POST.get("email")
-        password = request.POST.get("password")
+        username = request.POST['username']
+        email = request.POST['email']
+        password = request.POST['password']
 
-        if username and email and password:
-            messages.success(request, "Success")
-            # messages.warning(request, "Warning")
-            # messages.info(request, "Info")
-            messages.error(request, "Error")
-        else:
-            messages.error(request, "Error")
-            
+        context = {
+            'fieldValues': request.POST
+        }
+
+        if not User.objects.filter(username=username).exists():
+            if not User.objects.filter(email=email).exists():
+                if not PasswordValidationView().check_password_validity(password):
+                    messages.error(request, 'Invalid password: Please read password requirements!')
+                    return render(request, 'authentication/signup.html', context=context)
+                
+                user = User.objects.create_user(username=username, email=email)
+                user.set_password(password)
+                user.is_active = False
+                user.save()
+                send_email(email)
+
+                messages.success(request, 'Account successfully created!')
+            else:
+                messages.error(request, 'Email is taken.')
+                return render(request, 'authentication/signup.html', context=context)
+
         return render(request, 'authentication/signup.html')
-
 
 class EmailFieldView(View):
     def post(self, request):

@@ -4,6 +4,7 @@ from .views import *
 
 urlpatterns = [
     path('signup/', SignupView.as_view(), name='signup'),
+    path('login/', LoginView.as_view(), name='login'),
     path('validate-username/', csrf_exempt(UserNameValidationView.as_view()), name='validate_username'),
     path('validate-email/', csrf_exempt(EmailFieldView.as_view()), name='validate_email'),
     path('validate-password/', csrf_exempt(PasswordValidationView.as_view()), name='validate_password'),
