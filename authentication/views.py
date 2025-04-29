@@ -2,36 +2,35 @@ import re
 import json
 from validate_email import validate_email
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.urls import reverse
+from django.http import HttpResponse
 
 from django.core.mail import EmailMessage
 
-def send_email(rcpt_email):
+from django.utils.encoding import force_bytes, force_str, DjangoUnicodeDecodeError
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.contrib.sites.shortcuts import get_current_site
+
+from .utils import token_generator
+
+def send_email(activate_url, user):
     subject = 'Activate your account.'
-    body = 'Please verify your account'
+    body = f'Hi {user.username}\n. Please use this link {activate_url} to verify your account.'
 
     email = EmailMessage (
         subject,
         body,
         "abdulrahmanibrahim.ish@gmail.com",
-        [rcpt_email],
+        [user.email],
     )
 
     email.send(fail_silently=False)
 
-
-class LoginView(View):
-    def get(self, request):
-        return render(request, 'authentication/login.html')
-    
-    def post(self, request):
-        username = request.POST.get('username')
-        print(username)
-        return render(request, 'authentication/login.html')
 
 class SignupView(View):
     def get(self, request):
@@ -56,7 +55,14 @@ class SignupView(View):
                 user.set_password(password)
                 user.is_active = False
                 user.save()
-                send_email(email)
+
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+                domain = get_current_site(request).domain
+                link = reverse('activate', kwargs={'uidb64': uidb64, 'token': token_generator.make_token(user)})
+                activate_url = 'http://'+ domain + link
+
+                send_email(activate_url, user)
 
                 messages.success(request, 'Account successfully created!')
             else:
@@ -64,6 +70,12 @@ class SignupView(View):
                 return render(request, 'authentication/signup.html', context=context)
 
         return render(request, 'authentication/signup.html')
+
+
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'authentication/login.html')
+
 
 class EmailFieldView(View):
     def post(self, request):
@@ -120,3 +132,21 @@ class PasswordValidationView(View):
         if mat:
             return True
         return False
+    
+
+class VerificationView(View):
+    def get(self, request, uidb64, token):
+        id = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=id)
+
+        if not token_generator.check_token(user, token):
+            return HttpResponse('<h1>Verification Link Expired</h1>')
+
+        if user.is_active:
+            return redirect(reverse('login'))
+        
+        user.is_active = True
+        user.save()
+
+        messages.success(request, 'Account activated succesfully')
+        return redirect(reverse('login'))
