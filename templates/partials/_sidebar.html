@@ -67,26 +67,29 @@
 
             <hr class="my-3">
 
+            <h6
+                class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-body-secondary text-uppercase">
+                <span>Settings</span>
+            </h6>
             <ul class="nav flex-column mb-auto">
+                <li class="nav-item">
+                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'general' %}">
+                        <svg class="bi" aria-hidden="true">
+                            <use xlink:href="#gear-wide-connected" />
+                        </svg>
+                        General
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link d-flex align-items-center gap-2" href="#">
                         <svg class="bi" aria-hidden="true">
                             <use xlink:href="#gear-wide-connected" />
                         </svg>
-                        Settings
+                        Account
                     </a>
                 </li>
-                <li class="nav-item">
-                    <form method="POST" action="{% url 'logout' %}" style="margin: 0;">
-                        {% csrf_token %}
-                        <button type="submit" class="nav-link d-flex align-items-center gap-2">
-                            <svg class="bi" aria-hidden="true">
-                                <use xlink:href="#door-closed" />
-                            </svg>
-                            Sign out
-                        </button>
-                    </form>
-                </li>
+
             </ul>
         </div>
     </div>

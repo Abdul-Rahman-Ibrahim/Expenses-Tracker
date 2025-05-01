@@ -163,20 +163,12 @@
                     </svg>
                 </button>
             </li>
-            <li class="nav-item text-nowrap">
-                <button class="nav-link px-3 text-white" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <svg class="bi" aria-hidden="true">
-                        <use xlink:href="#list" />
-                    </svg>
-                </button>
-            </li>
         </ul>
 
         <div id="navbarSearch" class="navbar-search w-100 collapse">
             <input class="form-control w-100 rounded-0 border-0" type="text" placeholder="Search" aria-label="Search">
         </div>
+        
     </header>
 
     <div class="container-fluid">
@@ -200,5 +192,17 @@
 
     <script defer src="{% static 'js/base.js' %}"></script>
 </body>
-
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">TrulyExpenses</a>
+    
+        <ul class="navbar-nav px-3" style="display: flex; flex-direction: row; align-items: center;">
+    
+            <li class="nav-item text-nowrap mt-3 ml-2">
+                <form action="{% url  'logout' %}" method="POST">
+                    {% csrf_token %}
+                    <input class="text text-capitalize" type="submit" value="Sign out" />
+                </form>
+            </li>
+        </ul>
+    </nav>
 </html>
