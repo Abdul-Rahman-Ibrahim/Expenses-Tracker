@@ -1,5 +1,17 @@
-/.venv
-/.vscode
-
+# Python
+__pycache__/
+*.py[cod]
 *.env
+*.sqlite3
+*.log
+
+# Virtual env
+.venv/
+env/
+venv/
+
+# VS Code
+.vscode/
+
+# Django specific
 db.sqlite3
