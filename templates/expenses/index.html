@@ -2,21 +2,25 @@
 
 {% block content %}
 
+<hr>
 {% include 'partials/_messages.html' %}
 
-<div class="container">
-<h1>Home</h1>
+<div class="container mt-4">
 
-<ul class="list-group">
-    <li class="list-group-item">Bought a ticket</li>
-    <li class="list-group-item">Bought a ticket</li>
-    <li class="list-group-item">Bought a ticket</li>
-    <li class="list-group-item">Bought a ticket</li>
-    <li class="list-group-item">Bought a ticket</li>
-    <li class="list-group-item">Bought a ticket</li>
-    <li class="list-group-item">Bought a ticket</li>
-    <li class="list-group-item">Bought a ticket</li>
-</ul>
+    <div class="row">
+        <div class="col-md-10">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Expenses</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">My Expenses</li>
+                </ol>
+            </nav>
+        </div>
+        
+        <div class="col-md-2">
+            <a class="btn btn-primary" href="{% url 'add_expense' %}" role="button">Add Expenses</a>
+        </div>
+    </div>
 
 </div>
 
