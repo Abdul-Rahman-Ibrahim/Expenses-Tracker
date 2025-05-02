@@ -1,6 +1,8 @@
+{% extends 'expenses/edit-expense.html' %}
+
 {% load static %}
 
-<html lang="en" data-bs-theme="auto">
+<!-- <html lang="en" data-bs-theme="auto">
 
 <head>
     <meta charset="utf-8">
@@ -18,13 +20,13 @@
             -moz-user-select: none;
             user-select: none;
         }
-    
+
         @media (min-width: 768px) {
             .bd-placeholder-img-lg {
                 font-size: 3.5rem;
             }
         }
-    
+
         .b-example-divider {
             width: 100%;
             height: 3rem;
@@ -33,25 +35,25 @@
             border-width: 1px 0;
             box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
         }
-    
+
         .b-example-vr {
             flex-shrink: 0;
             width: 1.5rem;
             height: 100vh;
         }
-    
+
         .bi {
             vertical-align: -.125em;
             fill: currentColor;
         }
-    
+
         .nav-scroller {
             position: relative;
             z-index: 2;
             height: 2.75rem;
             overflow-y: hidden;
         }
-    
+
         .nav-scroller .nav {
             display: flex;
             flex-wrap: nowrap;
@@ -62,11 +64,11 @@
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
         }
-    
+
         .btn-bd-primary {
             --bd-violet-bg: #712cf9;
             --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
-    
+
             --bs-btn-font-weight: 600;
             --bs-btn-color: var(--bs-white);
             --bs-btn-bg: var(--bd-violet-bg);
@@ -79,48 +81,50 @@
             --bs-btn-active-bg: #5a23c8;
             --bs-btn-active-border-color: #5a23c8;
         }
-    
+
         .bd-mode-toggle {
             z-index: 1500;
         }
-    
+
         .bd-mode-toggle .bi {
             width: 1em;
             height: 1em;
         }
-    
+
         .bd-mode-toggle .dropdown-menu .active .bi {
             display: block !important;
         }
+
         .modal-sheet .modal-dialog {
             width: 380px;
             transition: bottom .75s ease-in-out;
         }
+
         .modal-sheet .modal-footer {
             padding-bottom: 2rem;
-            }
-
+        }
     </style>
 
-</head>
+</head> -->
 
-<body>
+{% block warning %}
+
     <div class="modal modal-sheet position-static d-block bg-body-secondary p-4 py-md-5" tabindex="-1" role="dialog"
         id="modalChoice">
         <div class="modal-dialog">
             <div class="modal-content rounded-3 shadow">
                 <div class="modal-body p-4 text-center">
-                    <h5 class="mb-0">Enable this setting?</h5>
-                    <p class="mb-0">You can always change your mind in your account settings.</p>
+                    <h5 class="mb-0">Are you sure you want to delete this expense?</h5>
                 </div>
                 <div class="modal-footer flex-nowrap p-0">
-                    <button type="button"
+                    <a type="button" href="{% url 'delete_expense' expense.id %}"
                         class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end"><strong>Yes,
-                            enable</strong></button>
-                    <button type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0"
-                        data-bs-dismiss="modal">No thanks</button>
+                            delete</strong></a>
+                    <a type="button" class="btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0"
+                        data-bs-dismiss="modal">Cancel</a>
                 </div>
             </div>
         </div>
     </div>
-</body>
+
+{% endblock warning %}

@@ -124,11 +124,6 @@ class DeleteExpenseView(View):
         return redirect('home')
 
 
-# class ModalView(View):
-#     def get(self, request):
-#         return render(request, 'partials/_modal.html')
-
-
 # @never_cache
 # @login_required(login_url='/authentication/login')
 # def index_view(request):
