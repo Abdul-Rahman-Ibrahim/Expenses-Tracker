@@ -5,24 +5,59 @@
 <hr>
 {% include 'partials/_messages.html' %}
 
-<div class="container mt-4">
+<div class="container mt-5">
 
-    <div class="row">
-        <div class="col-md-10">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Expenses</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">My Expenses</li>
-                </ol>
-            </nav>
+    <!-- Header Row -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'home' %}">Expenses</a></li>
+                <li class="breadcrumb-item active" aria-current="page">My Expenses</li>
+            </ol>
+        </nav>
+        <a class="btn btn-primary btn-sm" href="{% url 'add_expense' %}">+ Add Expense</a>
+    </div>
+
+    <!-- Table Section -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">My Expenses</h5>
         </div>
-        
-        <div class="col-md-2">
-            <a class="btn btn-primary" href="{% url 'add_expense' %}" role="button">Add Expenses</a>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Category</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if expenses %}
+                        {% for expense in expenses %}
+                        <tr>
+                            <td>{{ preference }} {{ expense.amount }}</td>
+                            <td>{{ expense.description }}</td>
+                            <td>{{ expense.category.name }}</td>
+                            <td>{{ expense.date }}</td>
+                            <td><a href="{% url 'edit_expense' expense.id %}" class="btn btn-secondary">Edit</a></td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">
+                                No expenses found.
+                            </td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
 </div>
-
 
 {% endblock content %}

@@ -18,7 +18,7 @@ class IndexView(View):
         with open(json_path, 'r') as file:
             content = json.load(file)
         for key, value in content.items():
-            currency_data.append({'name': key, 'value': value})  
+            currency_data.append({'name': key, 'value': value})
         # import pdb
         # pdb.set_trace()
         user_preferences = None
