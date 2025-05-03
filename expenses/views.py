@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.cache import never_cache
 from django.contrib import messages
+from django.core.paginator import Paginator
 
 from userpreferences.models import UserPreference
 from .models import Category, Expense
@@ -22,9 +23,14 @@ class IndexView(View):
             currency = preference.preference.split("-")[0]
             # print(preference.preference)
 
+        PAGE_NUMBER = 2
+        page_number = request.GET.get('page')
+        paginator = Paginator(expenses, PAGE_NUMBER)
+        page_obj =  paginator.get_page(page_number)
         context = {
             'expenses': expenses,
-            'preference': currency
+            'preference': currency,
+            'page_obj': page_obj
         }
         return render(request, 'expenses/index.html', context=context)
 
