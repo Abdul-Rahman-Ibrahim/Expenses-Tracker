@@ -10,6 +10,7 @@ from django.core.paginator import Paginator
 from userpreferences.models import UserPreference
 from .models import Category, Expense
 
+
 @method_decorator(login_required(login_url='/authentication/login'), name='dispatch')
 @method_decorator(never_cache, name='dispatch')
 class IndexView(View):
