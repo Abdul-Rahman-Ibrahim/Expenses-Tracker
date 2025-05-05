@@ -129,6 +129,16 @@ class DeleteExpenseView(View):
         expense.delete()
         messages.success(request, "Expense deleted successfully.")
         return redirect('home')
+    
+
+# class SearchView(View):
+#     def post(request):
+#         data = request.POST.get('search')
+#         amount_filter = None
+#         if data.isalnum():
+#             amount_filter = Expense.objects.filter(amount=float(data))
+#         description_filter = Expense.objects.filter(description = data)
+        
 
 
 # @never_cache
