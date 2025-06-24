@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .models import Category, Expense
 
 users = User.objects.all()
-root = users[2]
+root = users[1]
 
 category_names = ['Travel', 'Food', 'Insurance', 'Family']
 categories = Category.objects.all()

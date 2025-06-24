@@ -7,6 +7,8 @@ from django.views.decorators.cache import never_cache
 from django.contrib import messages
 from django.core.paginator import Paginator
 
+from django.db.models import Q
+
 from userpreferences.models import UserPreference
 from .models import Category, Expense
 
@@ -15,23 +17,32 @@ from .models import Category, Expense
 @method_decorator(never_cache, name='dispatch')
 class IndexView(View):
     def get(self, request):
-
-        expenses = Expense.objects.filter(owner=request.user)
+        search_query = request.GET.get('search', '')
         
-        preference = None
+        expenses = Expense.objects.filter(owner=request.user)
+
+        if search_query:
+            expenses = expenses.filter(
+                Q(description__icontains=search_query) |
+                Q(category__name__icontains=search_query) |
+                Q(amount__icontains=search_query)
+            )
+
+        currency = ''
         if UserPreference.objects.filter(user=request.user).exists():
             preference = UserPreference.objects.get(user=request.user)
             currency = preference.preference.split("-")[0]
-            # print(preference.preference)
 
-        PAGE_NUMBER = 2
+        PAGE_NUMBER = 5
         page_number = request.GET.get('page')
-        paginator = Paginator(expenses, PAGE_NUMBER)
-        page_obj =  paginator.get_page(page_number)
+        paginator = Paginator(expenses.order_by('-date'), PAGE_NUMBER)
+        page_obj = paginator.get_page(page_number)
+
         context = {
             'expenses': expenses,
             'preference': currency,
-            'page_obj': page_obj
+            'page_obj': page_obj,
+            'search_query': search_query
         }
         return render(request, 'expenses/index.html', context=context)
 
