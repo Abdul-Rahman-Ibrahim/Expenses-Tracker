@@ -8,7 +8,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.contrib import messages
 
-from .models import Income, Income_Category
+from .models import Income, Source
 from userpreferences.models import UserPreference
 
 class IncomeView(View):
@@ -19,7 +19,7 @@ class IncomeView(View):
         if search_query:
             incomes = incomes.filter(
                 Q(description__icontains=search_query) |
-                Q(category__name__icontains=search_query) |
+                Q(source__name__icontains=search_query) |
                 Q(amount__icontains=search_query)
             )
 
@@ -48,7 +48,7 @@ class AddIncomeView(View):
     def get(self, request):
         
         context = {
-            'categories': Income_Category.objects.all()
+            'categories': Source.objects.all()
         }
 
         # import pdb
@@ -61,12 +61,12 @@ class AddIncomeView(View):
         category_id = request.POST.get("category")
         date = request.POST.get("income_date")
 
-        category = Income_Category.objects.get(id=category_id)
+        category = Source.objects.get(id=category_id)
 
         Income.objects.create(
             amount=amount,
             description=description,
-            income_category=category,
+            source=category,
             owner=request.user,
             date=date
         )
@@ -80,7 +80,7 @@ class AddIncomeView(View):
 class EditIncomeView(View):
     def get(self, request, id):
         income = get_object_or_404(Income, id=id)
-        categories = Income_Category.objects.all()
+        categories = Source.objects.all()
         context = {
             'income': income,
             'categories': categories
@@ -95,7 +95,7 @@ class EditIncomeView(View):
         date = request.POST.get('date')
         category_id = request.POST.get('category')
 
-        category = Income_Category.objects.get(id=category_id)
+        category = Source.objects.get(id=category_id)
 
         income = Income.objects.get(id=id)
 
@@ -103,7 +103,7 @@ class EditIncomeView(View):
         income.owner = request.user
         income.description = description
         income.date = date
-        income.income_category = category
+        income.source = category
 
         income.save()
         messages.success(request, 'Income updated successfully')

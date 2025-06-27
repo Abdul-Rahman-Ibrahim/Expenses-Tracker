@@ -7,23 +7,23 @@ class Income(models.Model):
     date = models.DateField(default=now)
     description = models.TextField()
     owner = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    income_category = models.ForeignKey(
-            to='Income_Category',
+    source = models.ForeignKey(
+            to='Source',
             on_delete=models.SET_NULL,
             null=True,  # Allow expenses to exist even if category is deleted
             blank=True)
     def __str__(self) -> str:
-        return f'{self.income_category.name if self.income_category else 'No Category'}'
+        return f'{self.source.name if self.source else 'No Source'}'
     
     class Meta:
         ordering = ['-date']
 
 
-class Income_Category(models.Model):
+class Source(models.Model):
     name = models.CharField(max_length=255)
 
     class Meta:
-        verbose_name_plural = 'Income Categories'
+        verbose_name_plural = 'Sources'
     
     def __str__(self) -> str:
         return self.name

@@ -55,10 +55,10 @@
                 <div class="mb-4">
                     <label for="category" class="form-label">Category</label>
                     <select class="form-select" name="category" id="category" required>
-                        <option selected value="{{ income.income_category.id }}">{{ income.income_category.name }}</option>
+                        <option selected value="{{ income.source.id }}">{{ income.source.name }}</option>
                         {% for category in categories %}
-                        {% if category.name != income.income_category.name %}
-                        <option value="{{ income_category.id }}">{{ income_category.name }}</option>
+                        {% if category.name != income.source.name %}
+                        <option value="{{ category.id }}">{{ category.name }}</option>
                         {% endif %}
                         {% endfor %}
                     </select>
