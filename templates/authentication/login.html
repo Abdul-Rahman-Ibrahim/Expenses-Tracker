@@ -8,9 +8,8 @@
         <div class="card-body">
             <h4 class="card-title text-center mb-4">Sign In</h4>
             <form action="{% url 'login' %}" method="post">
-                {% include 'partials/_messages.html' %}
                 {% csrf_token %}
-
+                {% include 'partials/_messages.html' %}
                 <div class="form-group mb-3">
                     <label for="usernameField" class="form-label">Username</label>
                     <input type="text" name="username" id="usernameField" placeholder="Enter username"
@@ -34,6 +33,12 @@
                     <small>
                         Don't have an account?
                         <a href="{% url 'signup' %}">Sign up</a>
+                    </small>
+                </div>
+
+                <div class="text-center mt-3">
+                    <small>
+                        <a href="{% url 'reset-password' %}">Forgot Password?</a>
                     </small>
                 </div>
 

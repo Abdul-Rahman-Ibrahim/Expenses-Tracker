@@ -189,3 +189,67 @@ class VerificationView(View):
 
         messages.success(request, 'Account activated succesfully')
         return redirect(reverse('login'))
+    
+
+class RequestPasswordResetEmail(View):
+    def get(self, request):
+        return render(request, 'authentication/reset-password.html')
+    
+    def post(self, request):
+        email = request.POST.get('email')
+        context = {
+            'fieldValues': request.POST,
+        }
+        if not validate_email(email):
+            messages.error(request, 'Email is invalid!')
+            return render(request, 'authentication/reset-password.html', context=context)
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email=email)
+
+            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+
+            domain = get_current_site(request).domain
+            link = reverse('new-password', kwargs={'uidb64': uidb64, 'token': token_generator.make_token(user)})
+            activate_url = 'http://'+ domain + link
+
+            send_email(activate_url, user)
+            messages.success(request, 'Check your email!')
+        else:
+            messages.error(request, 'Email is not registered!')
+            return render(request, 'authentication/reset-password.html', context=context)
+        
+        return render(request, 'authentication/reset-password.html')
+    
+
+class ResetPasswordVerificationView(View):
+    def get(self, request, uidb64, token):
+        id = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=id)
+        #always check whether token has been re-used. PasswordTokenGenerator can do that. refer to chatgpt
+
+        if not token_generator.check_token(user, token):
+            return HttpResponse('<h1>Verification Link Expired</h1>')
+        
+        context = {
+            'user': user,
+            'uidb64': uidb64,
+            'token': token,
+        }
+        
+        print('Here')
+        return render(request, 'authentication/new-password-form.html', context=context)
+    
+    def post(self, request, uidb64, token):
+        password = request.POST['password']
+        id = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=id)
+
+        if not token_generator.check_token(user, token):
+            return HttpResponse('<h1>Verification Link Expired</h1>')
+
+        user.set_password(password)  # Use set_password for proper hashing
+        user.save()
+
+        messages.success(request, 'Password has been reset successfully. You can now log in.')
+        return redirect('login')
