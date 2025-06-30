@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<hr>
+{% include 'partials/_messages.html' %}
+
+<div class="container mt-5">
+    <form method="get" class="mb-3">
+    </form>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="{% url 'expense_summary' %}">Expenses Summary</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Summary</li>
+            </ol>
+        </nav>
+        <a class="btn btn-primary btn-sm" href="">Summary</a>
+    </div>
+
+    <form id="monthsForm" class="mb-4 text-center">
+        <label for="numMonths">Select number of months:</label>
+        <select id="numMonths" name="num_months" class="form-select d-inline-block w-auto mx-2">
+            {% for i in months_range %}
+            <option value="{{ i }}" {% if i == num_months %}selected{% endif %}>{{ i }}</option>
+            {% endfor %}
+        </select>
+    </form>
+    
+</div>
+
+    <h2 class="text-center">Expenses by Category (Last {{num_months}} Months)</h2>
+    
+    <div style="width: 60%; margin: auto;">
+        <canvas id="expenseChart"></canvas>
+    </div>
+    
+    <script src="{% static 'js/charts.js' %}"></script>
+        
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock content %}

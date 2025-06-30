@@ -1,6 +1,5 @@
 import re
 import json
-import time
 from validate_email import validate_email
 
 from django.shortcuts import render, redirect

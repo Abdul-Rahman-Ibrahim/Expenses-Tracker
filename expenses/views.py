@@ -10,7 +10,11 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 
 from userpreferences.models import UserPreference
+from django.http import JsonResponse
+
 from .models import Category, Expense
+import datetime
+import json
 
 
 @method_decorator(login_required(login_url='/authentication/login'), name='dispatch')
@@ -141,3 +145,31 @@ class DeleteExpenseView(View):
         messages.success(request, "Expense deleted successfully.")
         return redirect('home')
     
+
+class ExpenseCategorySummary(View):
+    def get(self, request):
+        return render(request, 'expenses/expense-summary.html', {
+            'num_months': 6,  # default value
+            'months_range': range(1, 13)
+        })
+
+    def post(self, request):
+        data = json.loads(request.body)
+        num_months = int(data.get('num_months', 6))
+
+        todays_date = datetime.date.today()
+        start_date = todays_date - datetime.timedelta(days=30 * num_months)
+
+        expenses = Expense.objects.filter(date__gte=start_date, date__lte=todays_date)
+
+        summary = {}
+        for expense in expenses:
+            category = expense.category.name
+            summary[category] = summary.get(category, 0) + expense.amount
+
+        return JsonResponse({'expense_category_data': summary})
+
+    
+    @staticmethod
+    def get_category(expense):
+        return expense.category.name
